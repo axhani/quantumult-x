@@ -1,19 +1,22 @@
 
-let cookie = $request.headers["cookie"] || $request.headers["Cookie"];
-let accesstoken = $request.headers["accesstoken"] || $request.headers["accessToken"];
-let user_agent = $request.headers["user-agent"] || $request.headers["User-Agent"];
+// 获取请求头中的 cookie, accessToken 和 user-agent
+let cookie = $request.headers['cookie'] || $request.headers['Cookie'];
+let accessToken = $request.headers['accesstoken'] || $request.headers['accessToken'];
+let userAgent = $request.headers['user-agent'] || $request.headers['User-Agent'];
 
+// 设置本地存储
 if (cookie) {
-    $prefs.setValueForKey(cookie, "Steampy_Cookie");
+    $prefs.set('Steampy_Cookie', cookie);
 }
-if (accesstoken) {
-    $prefs.setValueForKey(accesstoken, "Steampy_accessToken");
+if (accessToken) {
+    $prefs.set('Steampy_accessToken', accessToken);
 }
-if (user_agent) {
-    $prefs.setValueForKey(user_agent, "Steampy_user_agent");
+if (userAgent) {
+    $prefs.set('Steampy_user_agent', userAgent);
 }
 
-$notify("Steampy_Cookie", "Cookie 和 accesstoken 获取成功", `cookie: ${cookie}
-accesstoken: ${accesstoken}`);
+// 发送通知
+$notify('Steampy_Cookie', 'Cookie 和 accessToken 获取成功', `cookie: ${cookie}\naccessToken: ${accessToken}`);
 
+// 结束脚本
 $done();
