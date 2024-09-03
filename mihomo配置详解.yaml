@@ -1,37 +1,74 @@
 #################### 锚点配置 ####################
-proxy_providers: &proxy_providers # 代理集合锚点
-  type: http # 必须,provider类型,可选http/file
-  health-check: # 延迟测试
-    enable: true # 是否启用,可选 true/false
-    url: "https://detectportal.firefox.com/success.txt" # 使⽤ https ,防⽌⽆良⽼板伪造延迟!
-    interval: 300 # 测试间隔,如不为0则启用定时测试,单位为秒
-    timeout: 5000 # 测试超时时间,单位为毫秒
-    expected-status: 204/200 # 状态码
-    lazy: false # 懒惰状态,默认为true,不使用该集合节点时,不进行测试
-  override: # 覆写节点内容
-    udp: true # 是否允许 UDP 通过代理
-    ip-version: dual # 设置节点使用 IP 版本
-    tfo: false # TCP 快速打开
-    mptcp: true # TCP 多路传输
-    skip-cert-verify: false # 跳过证书验证,仅适用于使用tls的协议
-  # filter: "(?i)^(?!.*(?:回国|安徽|北京|重庆|福建|甘肃|广东|广西|贵州|海南|河北|黑龙江|河南|湖北|湖南|吉林|江苏|江西|辽宁|内蒙古|宁夏|青海|山东|山西|陕西|上海|四川|天津|西藏|新疆|云南|浙江)).*"
-  exclude-filter: "(?i)回国|安徽|北京|重庆|福建|甘肃|广东|广西|贵州|海南|河北|黑龙江|河南|湖北|湖南|吉林|江苏|江西|辽宁|内蒙古|宁夏|青海|山东|山西|陕西|上海|四川|天津|西藏|新疆|云南|浙江"
-  # 过滤回国
+ # 代理集合锚点
+proxy_providers: &proxy_providers
 
-use_all: &use_all # 策略组锚点
+# 必须,provider类型,可选http/file
+  type: http 
+
+  # 延迟测试
+  health-check: 
+
+  # 是否启用,可选 true/false
+    enable: true 
+
+    # 使⽤ https ,防⽌⽆良⽼板伪造延迟!
+    url: "https://detectportal.firefox.com/success.txt" 
+
+    # 测试间隔,如不为0则启用定时测试,单位为秒
+    interval: 300 
+
+    # 测试超时时间,单位为毫秒
+    timeout: 5000 
+
+    # 状态码
+    expected-status: 204/200 
+
+    # 懒惰状态,默认为true,不使用该集合节点时,不进行测试
+    lazy: false 
+
+    # 覆写节点内容
+  override: 
+
+  # 是否允许 UDP 通过代理
+    udp: true 
+
+    # 设置节点使用 IP 版本
+    ip-version: dual 
+
+    # TCP 快速打开
+    tfo: false 
+
+    # TCP 多路传输
+    mptcp: true 
+
+    # 跳过证书验证,仅适用于使用tls的协议
+    skip-cert-verify: false 
+
+    
+  # filter: "(?i)^(?!.*(?:回国|安徽|北京|重庆|福建|甘肃|广东|广西|贵州|海南|河北|黑龙江|河南|湖北|湖南|吉林|江苏|江西|辽宁|内蒙古|宁夏|青海|山东|山西|陕西|上海|四川|天津|西藏|新疆|云南|浙江)).*"
+
+  # 过滤回国
+  exclude-filter: "(?i)回国|安徽|北京|重庆|福建|甘肃|广东|广西|贵州|海南|河北|黑龙江|河南|湖北|湖南|吉林|江苏|江西|辽宁|内蒙古|宁夏|青海|山东|山西|陕西|上海|四川|天津|西藏|新疆|云南|浙江"
+  
+# 策略组锚点
+use_all: &use_all 
   use: # 引入所有代理集合
     - "1️⃣ 订阅"
     - "2️⃣ 订阅"
     - "🆓 公益"
 
-use_load_balance: &use_load_balance # 策略组锚点
+# 策略组锚点
+use_load_balance: &use_load_balance 
   use: # 引入需要负载均衡的代理集合
     - "1️⃣ 订阅"
     - "2️⃣ 订阅"
 
 #################### 全局配置 ####################
-mode: rule # 运行模式 rule / global / direct ,Clash Meta 暂不支持 script
-log-level: silent # 日志级别 silent / error / warning / info / debug
+# 运行模式 rule / global / direct ,Clash Meta 暂不支持 script
+mode: rule 
+
+# 日志级别 silent / error / warning / info / debug
+log-level: silent 
 
 port: 7890 # http(s) 代理端口
 socks-port: 7891 # socks4/4a/5 代理端口
@@ -70,7 +107,7 @@ geox-url: # 自定 GEO 下载地址
   geoip: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat"
   geosite: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat"
   mmdb: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/country.mmdb"
-  # asn: "https://raw.githubusercontent.com/xishang0128/geoip/release/GeoLite2-ASN.mmdb"
+  asn: "https://raw.githubusercontent.com/xishang0128/geoip/release/GeoLite2-ASN.mmdb"
 
 global-client-fingerprint: chrome # 全局客户端指纹
 global-ua: "Mozilla/5.0; AppleWebKit/537.36; Chrome/91.0.4472.114; Safari/537.36; Shadowrocket/1.9.7; meta/1.0.0; Sing/1.1.0" # 全局 UA ,默认clash.meta
@@ -259,8 +296,8 @@ proxy-providers:
 
 #################### 策略组 ####################
 proxy-groups:
-  - {name: 🧭 探索大陆, type: select, proxies: [🗺 选择节点, 🌸 自动切换, 🌿 负载均衡, 🌐 全球直连, 🏖 手动切换1, 🏖 手动切换2]}
   - {name: 🗺 选择节点, <<: *use_all, type: select, proxies: [🌸 自动切换, 🌐 全球直连]}
+  - {name: 🧭 探索大陆, type: select, proxies: [🗺 选择节点, 🌸 自动切换, 🌿 负载均衡, 🌐 全球直连, 🏖 手动切换1, 🏖 手动切换2]}
   - {name: 🌸 自动切换, <<: *use_all, tolerance: 5, type: url-test}
   - {name: 🌿 负载均衡, <<: *use_load_balance, type: load-balance, strategy: consistent-hashing}
   - {name: 🏖 手动切换1, type: select, proxies: [🗺 选择节点, 🌸 自动切换, 🌿 负载均衡, 🌐 全球直连]}
@@ -278,13 +315,13 @@ proxy-groups:
   - {name: 🌐 全球直连, type: select, proxies: [DIRECT]}
   - {name: 🐋 漏网之鱼, type: select, proxies: [🧭 探索大陆, 🌐 全球直连]}
   # 分隔,下面是地区分组
-  # 🇺🇸 美国,🇯🇵 日本,🇹🇼 台湾,🇸🇬 狮城,🇭🇰 香港,🇺🇳 其他
-  # - {name: 🇺🇸 美国, <<: *use_all, filter: "(?i)🇺🇸|🇺🇲|美|United States|UnitedStates|America", tolerance: 5, type: url-test, hidden: true}
-  # - {name: 🇯🇵 日本, <<: *use_all, filter: "(?i)🇯🇵|日|Japan|Nippon|Nihon", tolerance: 5, type: url-test, hidden: true}
-  # - {name: 🇹🇼 台湾, <<: *use_all, filter: "(?i)🇹🇼|台|Taiwan|Formosa", tolerance: 5, type: url-test, hidden: true}
-  # - {name: 🇸🇬 狮城, <<: *use_all, filter: "(?i)🇸🇬|新|Singapore|Singapura", tolerance: 5, type: url-test, hidden: true}
-  # - {name: 🇭🇰 香港, <<: *use_all, filter: "(?i)🇭🇰|港|Hong Kong|Hongkong", tolerance: 5, type: url-test, hidden: true}
-  # - {name: 🇺🇳 其他, <<: *use_all, filter: "(?i)^(?!.*(?:🇺🇸|🇺🇲|美|United States|UnitedStates|America|🇯🇵|日|Japan|Nippon|Nihon|🇹🇼|台|Taiwan|Formosa|🇸🇬|新|Singapore|Singapura|🇭🇰|港|Hong Kong|Hongkong)).*", type: select}
+  # 美国,日本,台湾,新加坡,香港,其他
+   - {name: 美国, <<: *use_all, filter: "(?i)🇺🇸|🇺🇲|美|United States|UnitedStates|America", tolerance: 5, type: url-test, hidden: true}
+   - {name: 日本, <<: *use_all, filter: "(?i)🇯🇵|日|Japan|Nippon|Nihon", tolerance: 5, type: url-test, hidden: true}
+   - {name: 台湾, <<: *use_all, filter: "(?i)🇹🇼|台|Taiwan|Formosa", tolerance: 5, type: url-test, hidden: true}
+   - {name: 狮城, <<: *use_all, filter: "(?i)🇸🇬|新|Singapore|Singapura", tolerance: 5, type: url-test, hidden: true}
+   - {name: 香港, <<: *use_all, filter: "(?i)🇭🇰|港|Hong Kong|Hongkong", tolerance: 5, type: url-test, hidden: true}
+   - {name: 其他, <<: *use_all, filter: "(?i)^(?!.*(?:🇺🇸|🇺🇲|美|United States|UnitedStates|America|🇯🇵|日|Japan|Nippon|Nihon|🇹🇼|台|Taiwan|Formosa|🇸🇬|新|Singapore|Singapura|🇭🇰|港|Hong Kong|Hongkong)).*", type: select}
 
 #################### 规则集合 ####################
 rule-providers:
