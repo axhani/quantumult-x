@@ -315,7 +315,7 @@ proxy-groups:
   - {name: 🌐 全球直连, type: select, proxies: [DIRECT]}
   - {name: 🐋 漏网之鱼, type: select, proxies: [🧭 探索大陆, 🌐 全球直连]}
   # 分隔,下面是地区分组
-  # 美国,日本,台湾,新加坡,香港,其他
+   美国,日本,台湾,新加坡,香港,其他
    - {name: 美国, <<: *use_all, filter: "(?i)🇺🇸|🇺🇲|美|United States|UnitedStates|America", tolerance: 5, type: url-test, hidden: true}
    - {name: 日本, <<: *use_all, filter: "(?i)🇯🇵|日|Japan|Nippon|Nihon", tolerance: 5, type: url-test, hidden: true}
    - {name: 台湾, <<: *use_all, filter: "(?i)🇹🇼|台|Taiwan|Formosa", tolerance: 5, type: url-test, hidden: true}
