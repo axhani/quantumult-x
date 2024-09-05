@@ -1,0 +1,203 @@
+# url 里填写自己的订阅,名称不能重复
+proxy-providers:
+  provider1:
+    url: ""
+    type: http
+    interval: 86400
+    health-check: {enable: true,url: "https://www.gstatic.com/generate_204", interval: 300}
+    override:
+      additional-prefix: "[provider1]"
+
+  provider2:
+    url: ""
+    type: http
+    interval: 86400
+    health-check: {enable: true,url: "https://www.gstatic.com/generate_204",interval: 300}
+    override:
+      additional-prefix: "[provider2]"
+
+proxies: 
+  - name: "国内直连"
+    type: direct
+    udp: true
+
+mixed-port: 7890
+ipv6: true
+allow-lan: true
+unified-delay: false
+tcp-concurrent: true
+external-controller: 127.0.0.1:9090
+external-ui: ui
+external-ui-url: "https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip"
+
+geodata-mode: true
+geox-url:
+  geoip: "https://mirror.ghproxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip-lite.dat"
+  geosite: "https://mirror.ghproxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
+  mmdb: "https://mirror.ghproxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/country-lite.mmdb"
+  asn: "https://mirror.ghproxy.com/https://github.com/xishang0128/geoip/releases/download/latest/GeoLite2-ASN.mmdb"
+
+find-process-mode: strict
+global-client-fingerprint: chrome
+
+profile:
+  store-selected: true
+  store-fake-ip: true
+
+sniffer:
+  enable: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+      override-destination: true
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+    - "+.push.apple.com"
+
+tun:
+  enable: true
+  stack: mixed
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  auto-redirect: true
+  auto-detect-interface: true
+
+dns:
+  enable: true
+  ipv6: true
+  respect-rules: true
+  enhanced-mode: fake-ip
+  fake-ip-filter:
+    - "*"
+    - "+.lan"
+    - "+.local"
+    - "+.market.xiaomi.com"
+  nameserver:
+    - https://120.53.53.53/dns-query
+    - https://223.5.5.5/dns-query
+  proxy-server-nameserver:
+    - https://120.53.53.53/dns-query
+    - https://223.5.5.5/dns-query
+  nameserver-policy:
+    "geosite:cn,private":
+      - https://120.53.53.53/dns-query
+      - https://223.5.5.5/dns-query
+    "geosite:geolocation-!cn":
+      - "https://dns.cloudflare.com/dns-query"
+      - "https://dns.google/dns-query"
+
+proxy-groups:
+
+  - name: 兜底选择
+    type: select
+    proxies: [自动选择,直连,香港,台湾,日本,新加坡,美国,其它地区,全部节点]
+
+  - name: Google
+    type: select
+    proxies: [香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Telegram
+    type: select
+    proxies: [香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Twitter
+    type: select
+    proxies: [香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: 哔哩哔哩
+    type: select
+    proxies: [香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: YouTube
+    icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/6ecfbc9a6dfaff071cc269c8d16beb49f653971b/Color/YouTube.png"
+    type: select
+    proxies: [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: Github
+    type: select
+    proxies:  [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  - name: 国内
+    type: select
+    proxies:  [直连,默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择]
+
+  - name: 其他
+    type: select
+    proxies:  [默认,香港,台湾,日本,新加坡,美国,其它地区,全部节点,自动选择,直连]
+
+  #分隔,下面是地区分组
+  - name: 香港
+    type: "url-test"
+    interval: 300
+    include-all: true
+    filter: "^(?=.*((?i)🇭🇰|香港|(\b(HK|Hong)\d{0,2}\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$"
+    icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/HK.png"
+
+  - name: 台湾
+    type: "url-test"
+    interval: 300
+    include-all: true
+    filter: "^(?=.*((?i)🇹🇼|台湾|(\b(TW|Tai|Taiwan)\d{0,2}\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$"
+    icon: "https://github.com/Orz-3/mini/blob/6ecfbc9a6dfaff071cc269c8d16beb49f653971b/Color/TW.png"
+
+  - name: 日本
+    type: "url-test"
+    interval: 300
+    include-all: true
+    filter: "^(?=.*((?i)🇯🇵|日本|川日|东京|大阪|泉日|埼玉|(\b(JP|Japan)\d{0,2}\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$"
+    icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/JP.png"
+
+  - name: 新加坡
+    type: "url-test"
+    interval: 300
+    include-all: true
+    filter: "^(?=.*((?i)🇸🇬|新加坡|狮|(\b(SG|Singapore)\d{0,2}\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$"
+    icon:  "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/SG.png"
+
+  - name: 美国
+    type: "url-test"
+    interval: 300
+    include-all: true
+    filter: "^(?=.*((?i)🇺🇸|美国|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|(\b(US|United States)\d{0,2}\b)))(?!.*((?i)回国|校园|游戏|🎮|(\b(GAME)\b))).*$"
+    icon: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Orz-3/mini/master/Color/US.png"
+
+  - name: 其它地区
+    type: select
+    include-all: true
+    filter: "(?i)^(?!.*(?:🇭🇰|🇯🇵|🇺🇸|🇸🇬|🇨🇳|港|hk|hongkong|台|tw|taiwan|日|jp|japan|新|sg|singapore|美|us|unitedstates)).*"
+
+  - name: 全部节点
+    type: select
+    include-all: true
+
+  - name: 自动选择
+    type: url-test
+    include-all: true
+    tolerance: 10
+
+rules:
+  - GEOIP,lan,直连,no-resolve
+  - GEOSITE,github,Github
+  - GEOSITE,twitter,Twitter
+  - GEOSITE,youtube,YouTube
+  - GEOSITE,google,Google
+  - GEOSITE,telegram,Telegram
+  - GEOSITE,netflix,NETFLIX
+  - GEOSITE,bilibili,哔哩哔哩
+  - GEOSITE,bahamut,巴哈姆特
+  - GEOSITE,spotify,Spotify
+  - GEOSITE,CN,国内
+  - GEOSITE,geolocation-!cn,其他
+
+  - GEOIP,google,Google
+  - GEOIP,netflix,NETFLIX
+  - GEOIP,telegram,Telegram
+  - GEOIP,twitter,Twitter
+  - GEOIP,CN,国内
+  - MATCH,其他
